@@ -7,9 +7,20 @@ app = Flask(__name__)
 def home():
     try:
         conn = get_connection()
-        conn.close()
-        return "Database Connected ✅"
+        cursor = conn.cursor()
 
+        cursor.execute("SELECT * FROM users")
+
+        users = cursor.fetchall()
+
+        output = "<h1>Users from MySQL</h1>"
+
+        for user in users:
+            output += f"<p>{user[0]} - {user[1]}</p>"
+
+        cursor.close()
+        conn.close()
+        return output
     except Exception as e:
         return f"Connection Failed ❌ <br><br> {e}"
 
